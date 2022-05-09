@@ -22,6 +22,22 @@ StateAndNeighbors = Tuple[NVTNoseHooverState, NeighborList]
 
 
 class MolecularDynamics:
+    """MD simulation.
+
+    Args:
+        positions: initial positions.
+        species: atomic numbers of atoms.
+        box: simulation box.
+        masses: masses of atoms in unit of eV, Å and ps.
+        neighbor_fn: neighbor list function.
+        energy_fn: energy function.
+        ensemble: ensemble type. NVT, NVE, NPT are possible.
+        initial_temperature: initial temperature. For NVE, this value determines initial velocity.
+        fractional_coordinates: whether the coordinates are fractional.
+        traj_writer: trajectory writer.
+
+    """
+
     def __init__(
         self,
         positions: Array,
@@ -88,6 +104,14 @@ class MolecularDynamics:
         return init_fn, apply_fn
 
     def run(self, prng_key, n_steps, dt, write_every=10, log_file: str = None):
+        """
+        Args:
+            prng_key: JAX PRNG key.
+            n_steps: number of steps.
+            dt: time step in ps.
+            write_every: write trajectory every `write_every` steps.
+            log_file: log file. If None, log is written to only stdout.
+        """
         log = partial(utils.log, task="SIMULATION", filename=log_file)
         log(f"Running MD with {self.ensemble} ensemble.")
         log(f"Number of steps: {n_steps}")
