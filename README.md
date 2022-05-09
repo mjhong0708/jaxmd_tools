@@ -23,7 +23,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 jax.config.update("jax_enable_x64", True)
 
 # Prepare data
-atoms = ase.build.bulk("Si", crystalstructure="diamond", a=5.43, cubic=True).repeat((2, 2, 2))
+atoms = ase.build.bulk("Si", crystalstructure="diamond", a=5.43, cubic=True).repeat((5, 5, 5))
 
 R_init = jnp.asarray(atoms.get_scaled_positions())
 species = jnp.asarray(atoms.get_atomic_numbers())
@@ -45,31 +45,29 @@ dynamics = jaxmd_tools.MolecularDynamics(
     ensemble="NVT",
     initial_temperature=300,
     fractional_coordinates=True,
-    pressure=0.016021766208,
     traj_writer=jaxmd_tools.io.ASETrajWriter("md_nvt.traj", fractional_coordinates=True),
 )
-#                                                 in ps                                                
-dynamics.run(jax.random.PRNGKey(32), n_steps=100, dt=1e-3, write_every=10)
+#                                                    in ps                                                
+dynamics.run(jax.random.PRNGKey(32), n_steps=5000, dt=1e-3, write_every=500)
 ```
 
 ```log
-[2022-05-09 10:01:57] - SIMULATION	Running MD with NVT ensemble.
-[2022-05-09 10:01:57] - SIMULATION	Number of steps: 100
-[2022-05-09 10:01:57] - SIMULATION	Time step: 0.001 ps
-[2022-05-09 10:01:57] - SIMULATION	Total simulation time: 0.1 ps
-[2022-05-09 10:01:57] - SIMULATION	Initial temperature: 300 K
-[2022-05-09 10:01:57] - SIMULATION	Initializing state...
-[2022-05-09 10:02:04] - SIMULATION	Start simulation loop.
-[2022-05-09 10:02:04] - SIMULATION	Trajectory will be written to md_nvt.traj
-[2022-05-09 10:02:06] - SIMULATION	Step 10   T=151.111 K  PE=-276.427 eV  KE=1.250 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 20   T=80.029 K  PE=-275.831 eV  KE=0.662 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 30   T=162.728 K  PE=-276.491 eV  KE=1.346 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 40   T=113.889 K  PE=-276.043 eV  KE=0.942 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 50   T=100.492 K  PE=-275.898 eV  KE=0.831 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 60   T=184.605 K  PE=-276.535 eV  KE=1.527 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 70   T=158.513 K  PE=-276.250 eV  KE=1.311 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 80   T=158.184 K  PE=-276.197 eV  KE=1.309 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 90   T=195.703 K  PE=-276.454 eV  KE=1.619 eV
-[2022-05-09 10:02:06] - SIMULATION	Step 100  T=124.505 K  PE=-275.819 eV  KE=1.030 eV
-
+[2022-05-09 10:08:04] - SIMULATION	Running MD with NVT ensemble.
+[2022-05-09 10:08:04] - SIMULATION	Number of steps: 5000
+[2022-05-09 10:08:04] - SIMULATION	Time step: 0.001 ps
+[2022-05-09 10:08:04] - SIMULATION	Total simulation time: 5.0 ps
+[2022-05-09 10:08:04] - SIMULATION	Initial temperature: 300 K
+[2022-05-09 10:08:04] - SIMULATION	Initializing state...
+[2022-05-09 10:08:04] - SIMULATION	Start simulation loop.
+[2022-05-09 10:08:04] - SIMULATION	Trajectory will be written to md_nvt.traj
+[2022-05-09 10:08:06] - SIMULATION	Step 500   T=222.556 K  PE=-4306.503 eV  KE=28.768 eV
+[2022-05-09 10:08:07] - SIMULATION	Step 1000  T=341.019 K  PE=-4302.845 eV  KE=44.080 eV
+[2022-05-09 10:08:08] - SIMULATION	Step 1500  T=313.636 K  PE=-4300.885 eV  KE=40.541 eV
+[2022-05-09 10:08:09] - SIMULATION	Step 2000  T=282.477 K  PE=-4294.374 eV  KE=36.513 eV
+[2022-05-09 10:08:10] - SIMULATION	Step 2500  T=307.574 K  PE=-4297.625 eV  KE=39.757 eV
+[2022-05-09 10:08:11] - SIMULATION	Step 3000  T=284.591 K  PE=-4296.865 eV  KE=36.786 eV
+[2022-05-09 10:08:12] - SIMULATION	Step 3500  T=256.655 K  PE=-4293.984 eV  KE=33.175 eV
+[2022-05-09 10:08:13] - SIMULATION	Step 4000  T=295.389 K  PE=-4297.385 eV  KE=38.182 eV
+[2022-05-09 10:08:14] - SIMULATION	Step 4500  T=296.050 K  PE=-4296.823 eV  KE=38.267 eV
+[2022-05-09 10:08:15] - SIMULATION	Step 5000  T=308.599 K  PE=-4298.198 eV  KE=39.890 eV
 ```
