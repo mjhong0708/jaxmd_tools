@@ -1,4 +1,3 @@
-import os
 import pickle
 import warnings
 from datetime import datetime
@@ -11,6 +10,13 @@ import termcolor
 
 
 def log(msg: str, task: str = "MAIN", filename: Optional[str] = None):
+    """Logs a message to the terminal.
+
+    Args:
+        msg: Message to log.
+        task: Task to log.
+        filename: Filename to log to. If None, only logs to stdout.
+    """
     curr_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     msg_all = f"[{curr_time}] - {task}\t{msg}"
     msg_colored = termcolor.colored(f"[{curr_time}]", "green")
@@ -20,23 +26,6 @@ def log(msg: str, task: str = "MAIN", filename: Optional[str] = None):
     if filename is not None:
         with open(filename, "a") as f:
             f.write(msg_all + "\n")
-
-
-def is_notebook():
-    try:
-        from IPython import get_ipython
-
-        ipython = get_ipython()
-
-        if not ipython or "IPKernelApp" not in ipython.config:  # pragma: no cover
-            raise ImportError("console")
-
-        if "VSCODE_PID" in os.environ:  # pragma: no cover
-            raise ImportError("vscode")
-    except ImportError:
-        return False
-    else:  # pragma: no cover
-        return True
 
 
 # MD simulation utils
