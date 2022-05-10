@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jaxmd_tools"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = ["Minjoon Hong <mjhong0708@yonsei.ac.kr>"]
 
