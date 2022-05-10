@@ -162,10 +162,10 @@ class MolecularDynamics:
             else:
                 state = new_state
                 step += 1
-            PE = _energy_fn(state.position, neighbor=self.neighborlist)
 
             if self.ensemble.upper() == "NPT":
                 curr_box = simulate.npt_box(state)
+                PE = _energy_fn(state.position, neighbor=self.neighborlist, box=curr_box)
                 snapshot = io.Snapshot(
                     state.position,
                     state.velocity,
@@ -182,6 +182,7 @@ class MolecularDynamics:
                     f"Vol={vol:.3f} Å^3"
                 )
             else:
+                PE = _energy_fn(state.position, neighbor=self.neighborlist)
                 snapshot = io.Snapshot(
                     state.position,
                     state.velocity,
